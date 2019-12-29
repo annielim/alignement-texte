@@ -64,18 +64,27 @@
 %==============================================================================
 \section{Exercice 1}
 
-Pour calculer le score d'un alignement optimal entre x et y, nous pouvons utiliser l'algorithme de distance de Levenshtein, appelé distance d'édition (edit distance).
-Nous voulons observer les différences entre deux textes. Cela revient à calculer leur score d'alignement, le coût des opérations nécessaires (deletion, insertion, substitution) pour obtenir le même texte. Plus ce score est faible et plus les textes sont similaires, et donc sujet au plagiat.
-Le score optimal correspond au minimum entre les trois valeurs données par les opérations deletion, insertion et substitution. \\
+Pour calculer le score d'un alignement optimal entre x et y, nous pouvons utiliser
+l'algorithme de distance de Levenshtein, appelé distance d'édition (edit distance).
+Nous voulons observer les différences entre deux textes. Cela revient à calculer 
+leur score d'alignement, le coût des opérations nécessaires (deletion, insertion,
+substitution) pour obtenir le même texte. Plus ce score est faible et plus les textes
+sont similaires, et donc sujet au plagiat.
+Le score optimal correspond au minimum entre les trois valeurs données par les opérations
+deletion, insertion et substitution. \\
 Algo...\\
-Cet algorithme est bien de complexité o(|x|x|y|).
+Cet algorithme est bien de complexité $O(|n|x|m|)$.
 
 
 %==============================================================================
 \section{Exercice 2}
 
-A partir de la matrice T telle que T[i][j] est le score d'un alignement optimal etre x_{i} et y_{j}, nous pourrons retrouver les opérations nécessaires à la solution optimale pour aligner les deux textes, afin de construire les textes 1 et 2 modifiés alignés.\\
-Le backtracking consiste à suivre le chemin minimum de la matrice T de T[i][j] jusqu'à T[0][0].\\
+A partir de la matrice T telle que $T[i][j]$ est le score d'un alignement
+optimal etre $x_{i}$ et $y_{j}$, nous pourrons retrouver les opérations
+nécessaires à la solution optimale pour aligner les deux textes, afin de
+construire les textes 1 et 2 modifiés alignés.\\
+Le backtracking consiste à suivre le chemin minimum de la matrice T de
+$T[n][m]$ jusqu'à $T[0][0]$.\\
 Algo...\\
 
 %==============================================================================
