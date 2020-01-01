@@ -143,9 +143,9 @@ void affiche(char* texte1, char* texte2, int nbcar)
 
 
 /* =============================================================== */
-void affiche2(char* texte1, char* texte2, int nbcar)
-  /* idem affiche, mais avec un formattage different*/
+/* idem affiche, mais avec un formattage different*/
 /* =============================================================== */
+void affiche2(char* texte1, char* texte2, int nbcar)
 {
 
   int i, l1, l2, l;
@@ -203,39 +203,99 @@ int** compute_distance(char* texte1, char* texte2){
 	T[1][1] = Imin3(T[0][1]+1,T[1][0]+1, T[0][0]);
 	for(int i=1; i<n+1;++i)
 		for(int j=1; j<m+1;++j){
-			if(i==1 && j==1)
-				continue;
 			T[j][i] = Imin3(T[j-1][i]+1,\
 						   	T[j][i-1]+1	,\
-							T[j-1][i-1]+sub(texte1[i-2],texte2[i-2]));
+							T[j-1][i-1]+sub(texte1[i-1],texte2[j-1]));
 		}
 	
 	return T;
 }
 
+char** get_alignement(int** T, char* texte1, char* texte2, int verbose){
+
+	char blank = ' ';
+	int n = strlen(texte1);
+	int m = strlen(texte2);
+	int i = m;
+	int j = n;
+
+	int len = m+n;
+	//int len = Imax(m,n);
+	char *texte1_aligned = (char *)malloc((len)*sizeof(char));
+	char *texte2_aligned = (char *)malloc((len)*sizeof(char));
+
+	int k = 0;
+	int k_1 = 0;
+	int k_2 = 0;
+	while(i !=0 || j != 0){
+		//Si on a choisi Ins
+		if( i>0 && (T[i][j] == T[i-1][j] + 1)){
+			if(verbose) printf("Ins %c dans texte 1\n",texte2[m-k_2-1]);
+			texte1_aligned[k] = blank;
+			texte2_aligned[k] = texte2[m-k_2-1];
+			i--;
+			k_2++;
+		}
+		//Si on a choisi Del
+		else if( j>0 && (T[i][j] == T[i][j-1] + 1)){
+			if(verbose) printf("Del %c dans texte 1\n",texte1[n-k_1-1]);
+			texte1_aligned[k] = texte1[n-k_1-1];
+			texte2_aligned[k] = blank;
+			j--;
+			k_1++;
+		}
+		//Si on a choisi Sub
+		else if((T[i][j] == T[i-1][j-1] + sub(texte1[j-1],texte2[i-1]))){
+			if(verbose) printf("Remplacer %c par %c dans le texte 1\n",texte1[n-k_1-1],texte2[m-k_2-1]);
+			texte1_aligned[k] = texte1[n-k_1-1];
+			texte2_aligned[k] = texte2[m-k_2-1];
+			j--;
+			i--;
+			k_1++;
+			k_2++;
+		}
+		else{
+			printf("Erreur dans le calcul de la table\n");
+			break;
+		}
+		k++;
+	}
+
+	char **textes = (char**)malloc(2*sizeof(char*));
+	retourne(texte1_aligned);
+	retourne(texte2_aligned);
+	textes[0] = texte1_aligned;
+	textes[1] = texte2_aligned;
+	return textes; 
+}
+
+
 /* =============================================================== */
 int main(int argc, char **argv)
 /* =============================================================== */
 {
-  char *x, *y; 
+  char *texte1, *texte2; 
   
   if(argc != 3){
     printf("usage: %s text1 text2\n", argv[0]);
     exit(0);
   }  
 
-  x = readtextfile(argv[1]);
-  y = readtextfile(argv[2]);;
-
-  //affiche(x, y, 50);
+  texte1 = readtextfile(argv[1]);
+  texte2 = readtextfile(argv[2]);;
+  
+  affiche(texte1, texte2, 50);
  
 
-  char* texte1 = "chiens";
-  char* texte2 = "niche";
-  int** T = compute_distance("chiens","niche");
+  int** T = compute_distance(texte1,texte2);
   printf("Cout: %d\n",T[strlen(texte2)][strlen(texte1)]);
 
-  free(x);
-  free(y);
-  
+  char** alignes = get_alignement(T, texte1, texte2,0);
+  affiche(alignes[0],alignes[1],50);
+
+  free(alignes[0]);
+  free(alignes[1]);
+  free(alignes);
+  free(texte1);
+  free(texte2);
 }
