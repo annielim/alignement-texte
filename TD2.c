@@ -180,11 +180,19 @@ void affiche2(char* texte1, char* texte2, int nbcar)
   free(t2);
 }
 
+
+/*================================================================ */
+/* 					    Exercice 3                                 */
+/*================================================================ */
+
+
 int sub(char a, char b){
 	if(a == b)
 		return 0;
 	return 1;
 }
+
+
 int** compute_distance(char* texte1, char* texte2){
 	int n = strlen(texte1);
 	int m = strlen(texte2);
@@ -192,7 +200,7 @@ int** compute_distance(char* texte1, char* texte2){
 	int** T= (int**) malloc((m+1)*sizeof(int*));
     for(int i=0; i<=m; i++)
   		T[i]= (int*) malloc((n+1)*sizeof(int));
-	
+
 	//T[m+1][n+1]
 	T[0][0] = 0;
 	for(int i=1; i<n+1;++i)
@@ -218,39 +226,32 @@ char** get_alignement(int** T, char* texte1, char* texte2, int verbose){
 	int j = n;
 
 	int len = m+n;
-	//int len = Imax(m,n);
-	char *texte1_aligned = (char *)malloc((len)*sizeof(char));
-	char *texte2_aligned = (char *)malloc((len)*sizeof(char));
+	char *texte1_aligned = (char *)malloc((len+1)*sizeof(char));
+	char *texte2_aligned = (char *)malloc((len+1)*sizeof(char));
 
 	int k = 0;
-	int k_1 = 0;
-	int k_2 = 0;
 	while(i !=0 || j != 0){
 		//Si on a choisi Ins
 		if( i>0 && (T[i][j] == T[i-1][j] + 1)){
-			if(verbose) printf("Ins %c dans texte 1\n",texte2[m-k_2-1]);
+			if(verbose) printf("Ins %c dans texte 1\n",texte2[i-1]);
 			texte1_aligned[k] = blank;
-			texte2_aligned[k] = texte2[m-k_2-1];
+			texte2_aligned[k] = texte2[i-1];
 			i--;
-			k_2++;
 		}
 		//Si on a choisi Del
 		else if( j>0 && (T[i][j] == T[i][j-1] + 1)){
-			if(verbose) printf("Del %c dans texte 1\n",texte1[n-k_1-1]);
-			texte1_aligned[k] = texte1[n-k_1-1];
+			if(verbose) printf("Del %c dans texte 1\n",texte1[j-1]);
+			texte1_aligned[k] = texte1[j-1];
 			texte2_aligned[k] = blank;
 			j--;
-			k_1++;
 		}
 		//Si on a choisi Sub
 		else if((T[i][j] == T[i-1][j-1] + sub(texte1[j-1],texte2[i-1]))){
-			if(verbose) printf("Remplacer %c par %c dans le texte 1\n",texte1[n-k_1-1],texte2[m-k_2-1]);
-			texte1_aligned[k] = texte1[n-k_1-1];
-			texte2_aligned[k] = texte2[m-k_2-1];
+			if(verbose) printf("Remplacer %c par %c dans le texte 1\n",texte1[j-1],texte2[j-1]);
+			texte1_aligned[k] = texte1[j-1];
+			texte2_aligned[k] = texte2[i-1];
 			j--;
 			i--;
-			k_1++;
-			k_2++;
 		}
 		else{
 			printf("Erreur dans le calcul de la table\n");
@@ -258,6 +259,8 @@ char** get_alignement(int** T, char* texte1, char* texte2, int verbose){
 		}
 		k++;
 	}
+	texte1_aligned[k] ='\0';
+	texte2_aligned[k] ='\0';
 
 	char **textes = (char**)malloc(2*sizeof(char*));
 	retourne(texte1_aligned);
@@ -364,41 +367,42 @@ char*** get_alignement_texts(int** T, char** texte1,int n1, char** texte2,int n2
 	char **texte2_aligned = (char **)malloc((len)*sizeof(char*));
 
 	int k = 0;
-	int k_1 = 0;
-	int k_2 = 0;
 	while(i !=0 || j != 0){
 		//Si on a choisi Ins
 		if( i>0 && (T[i][j] == T[i-1][j] + ins_strings(texte2[i-1]))){
 			if(verbose) printf("Ins\n");
 			texte1_aligned[k] = blank_string(blank,strlen(texte2[i-1]));
-			texte2_aligned[k] = strdup(texte2[m-k_2-1]);
+			texte2_aligned[k] = strdup(texte2[i-1]);
 			i--;
-			k_2++;
-			//affiche(texte1_aligned[k],texte2_aligned[k],50);
 		}
 		//Si on a choisi Del
 		else if( j>0 && (T[i][j] == T[i][j-1] + del_strings(texte1[j-1]))){
 			if(verbose) printf("Del\n");
-			texte1_aligned[k] = strdup(texte1[n-k_1-1]);
+			texte1_aligned[k] = strdup(texte1[j-1]);
 			texte2_aligned[k] = blank_string(blank, strlen(texte1[j-1]));
 			j--;
-			k_1++;
 		}
 		//Si on a choisi Sub
 		else if((T[i][j] == T[i-1][j-1] + sub_strings(texte1[j-1],texte2[i-1]))){
 			if(verbose) printf("Sub\n");
 			
-			int** T = compute_distance(texte1[j-1],texte2[i-1]);
-
-		  	char** alignes = get_alignement(T, texte1[j-1], texte2[i-1],0);
+			int** T_temp = compute_distance(texte1[j-1],texte2[i-1]);
+			
+		  	char** alignes = get_alignement(T_temp, texte1[j-1], texte2[i-1],0);
 
 			texte1_aligned[k] = alignes[0];
 			texte2_aligned[k] = alignes[1];
-			//affiche(texte1_aligned[k],texte2_aligned[k],50);
+			
+			//Free T
+			int size =strlen(texte2[i-1]);
+			for(int i=0; i<=size;++i){
+				free(T_temp[i]);
+			}
+			free(T_temp);
+			//Free alignes
+			free(alignes);
 			j--;
 			i--;
-			k_1++;
-			k_2++;
 		}
 		else{
 			printf("Erreur dans le calcul de la table\n");
@@ -427,12 +431,36 @@ void align_texts(char* texte1, char*texte2){
   int** T = compute_distance_strings(liste1, n1, liste2, n2);
  
   int count;
-  char*** b = get_alignement_texts(T, liste1, n1, liste2, n2, 1, &count);
-
-  printf("Count:%d\n",count);
+  char*** result = get_alignement_texts(T, liste1, n1, liste2, n2, 1, &count);
   for(int i = count-1; i>=0;--i){
-	affiche(b[0][i],b[1][i],80);
+	affiche(result[0][i],result[1][i],25);
   }
+  
+  //Free results
+  for(int i=0;i<count;++i){
+	free(result[0][i]);
+	free(result[1][i]);
+  }
+  free(result[0]);
+  free(result[1]);
+  free(result);
+  
+  //Free T
+  for(int i=0;i<=n2+1;++i)
+	  free(T[i]);
+  free(T);
+
+  //Free liste1 et liste2
+  for(int i=0;i<=n1;++i){
+  		free(liste1[i]);
+  }
+  free(liste1);
+  
+  for(int i=0;i<=n2;++i){
+  		free(liste2[i]);
+  }
+  free(liste2);
+
 }
 
 /* =============================================================== */
@@ -471,11 +499,8 @@ int main(int argc, char **argv)
   //printf("%d\n",sub_strings("chiens","niche"));
   
 
-/*
-  free(alignes[0]);
-  free(alignes[1]);
-  free(alignes);
+
   free(texte1);
   free(texte2);
-*/
+
 }
