@@ -270,8 +270,25 @@ char** get_alignement(int** T, char* texte1, char* texte2, int verbose){
 	return textes; 
 }
 
+void align_sentence(char* texte1, char*texte2){
 
-
+  int** T = compute_distance(texte1, texte2);
+  printf("Distance entre les textes: %d, longueur du texte1: %ld, longueur du texte2: %ld\n",\
+		 T[strlen(texte2)][strlen(texte1)], strlen(texte1),strlen(texte2));
+ 
+  char** result = get_alignement(T, texte1, texte2, 0);
+  affiche(result[0],result[1],40);
+  
+  //Free results
+  free(result[0]);
+  free(result[1]);
+  free(result);
+  
+  //Free T
+  for(int i=0;i<=strlen(texte2);++i)
+	  free(T[i]);
+  free(T);
+}
 
 
 /*================================================================ */
@@ -290,12 +307,13 @@ int count_occurences(char* texte, const char sep){
 char** split(char* texte,int count, const char* sep){
 	if(count == 0)
 		return NULL;
-	
+
+	char* texte_cop = strdup(texte);
 	char** liste = (char**)malloc((count+1)*sizeof(char*));
 	char* reste = NULL;
 	char* token;
 	int i = 0;
-	for(token = strtok_r(texte,sep,&reste); token !=NULL; token=strtok_r(NULL,sep,&reste))
+	for(token = strtok_r(texte_cop,sep,&reste); token !=NULL; token=strtok_r(NULL,sep,&reste))
 	{
 		liste[i] = strdup(token);
 		i++;
@@ -420,20 +438,19 @@ char*** get_alignement_texts(int** T, char** texte1,int n1, char** texte2,int n2
 	return textes; 
 }
 
-void align_texts(char* texte1, char*texte2){
-
-	
+void align_texts(char* texte1, char* texte2){
   int n1 = count_occurences(texte1,'\n');
   char** liste1 = split(texte1,n1,"\n");
   int n2 = count_occurences(texte2,'\n');
   char** liste2 = split(texte2,n2,"\n");
 
   int** T = compute_distance_strings(liste1, n1, liste2, n2);
- 
+  printf("Distance entre les textes: %d, longueur du texte1: %ld, longueur du texte2: %ld\n",\
+		 T[n2+1][n1+1], strlen(texte1),strlen(texte2));
   int count;
-  char*** result = get_alignement_texts(T, liste1, n1, liste2, n2, 1, &count);
+  char*** result = get_alignement_texts(T, liste1, n1, liste2, n2, 0, &count);
   for(int i = count-1; i>=0;--i){
-	affiche(result[0][i],result[1][i],25);
+	affiche(result[0][i],result[1][i],40);
   }
   
   //Free results
@@ -468,37 +485,27 @@ int main(int argc, char **argv)
 /* =============================================================== */
 {
   char *texte1, *texte2; 
-  
-  if(argc != 3){
-    printf("usage: %s text1 text2\n", argv[0]);
-    exit(0);
-  }  
 
-  texte1 = readtextfile(argv[1]);
-  texte2 = readtextfile(argv[2]);;
+  printf("================================================================\n");
+  printf(" 	                        Exercice 3                            \n");
+  printf("================================================================\n");
+  
+  texte1 = readtextfile("texte1.txt");
+  texte2 = readtextfile("texte2.txt");
+  
+  align_sentence(texte1, texte2);
+
+  free(texte1);
+  free(texte2);
+  
+  printf("================================================================\n");
+  printf(" 	                        Exercice 4                            \n");
+  printf("================================================================\n");
+  
+  texte1 = readtextfile("t1.txt");
+  texte2 = readtextfile("t2.txt");
 
   align_texts(texte1, texte2);
-
-  /*  
-  affiche(texte1, texte2, 50);
-
-  int** T = compute_distance(texte1,texte2);
-  printf("Cout: %d\n",T[strlen(texte2)][strlen(texte1)]);
-
-  char** alignes = get_alignement(T, texte1, texte2,0);
-  affiche(alignes[0],alignes[1],50);
-*/
-
-  /*
-  int n = count_occurences(texte1,'\n');
-  char** liste = split(texte1,n,"\n");
-  for(int i = 0; i < n+1; ++i){
-	printf("Token %d:%s\n",i,liste[i]);
-  }*/
-
-  //printf("%d\n",sub_strings("chiens","niche"));
-  
-
 
   free(texte1);
   free(texte2);
