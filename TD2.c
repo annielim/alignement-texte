@@ -207,7 +207,6 @@ int** compute_distance(char* texte1, char* texte2){
 		T[0][i] = T[0][i-1] + 1; //Cout del
 	for(int j=1; j<m+1;++j)
 		T[j][0] = T[j-1][0] + 1; //Cout ins	
-	T[1][1] = Imin3(T[0][1]+1,T[1][0]+1, T[0][0]);
 	for(int i=1; i<n+1;++i)
 		for(int j=1; j<m+1;++j){
 			T[j][i] = Imin3(T[j-1][i]+1,\
@@ -295,6 +294,7 @@ void align_sentence(char* texte1, char*texte2){
 /* 					    Exercice 4                                 */
 /*================================================================ */
 
+
 int count_occurences(char* texte, const char sep){
 	int count = 0;
 	for(int i = 0; i < strlen(texte);++i){
@@ -360,7 +360,6 @@ int** compute_distance_strings(char** texte1,int n1, char** texte2,int n2){
 		T[0][i] = T[0][i-1] + del_strings(texte1[i-1]); //Cout del
 	for(int j=1; j<m+1;++j)
 		T[j][0] = T[j-1][0] + ins_strings(texte2[j-1]); //Cout ins	
-	T[1][1] = Imin3(T[0][1]+1,T[1][0]+1, T[0][0]);
 	for(int i=1; i<n+1;++i)
 		for(int j=1; j<m+1;++j){
 			T[j][i] = Imin3(T[j-1][i]+ins_strings(texte2[j-1]),\

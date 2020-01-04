@@ -111,28 +111,28 @@ ou l'autre va augmenter le coût de l'alignement de 1.\\
 
 La troisième action que nous pouvons réaliser est tout simplement de ne pas
 modifier notre texte. Cela ajoutera ainsi un coût de 1 à notre alignement si
-les caractères de nos deux textes sont identiques, et un coût de 1 sinon.
+les caractères de nos deux textes sont identiques, et un coût de 1 sinon.\\
 
 Visuellement, si nous remplaçons tous les blancs de $x'$ par le caractère au
 même endroit dans $y'$, que nous enlevons dans les deux textes les caractères
-aux indices ou $y'$ contient un caractère blanc et que autres indices nous
+aux indices où $y'$ contient un caractère blanc et que autres indices nous
 remplaçons $x'[i]$ par $y'[i]$ si ces caractères sont différents, nous avons
-trouvé un moyen de transformer x en y à partir d'un alignement de ces deux
+trouvé un moyen de transformer $x$ en $y$ à partir d'un alignement de ces deux
 textes.\\
-De plus le coût de cette transformation de x en y est le même que le score de
+De plus le coût de cette transformation de $x$ en $y$ est le même que le score de
 l'alignement $x', y'$.
-Nous pouvons en déduire alors les relations suivantes:
+Nous pouvons en déduire alors les relations suivantes pour la transformation:
 
 \begin{center}
 	Mettre un blanc dans $x$ à l'indice $i$ $\Rightarrow$ Insérer $y[i]$ à
-	l'indice $i$ dans x \\
+	l'indice $i$ dans $x$ \\
 	Mettre un blanc dans $y$ à l'indice $i$ $\Rightarrow$ Supprimer le
-	caractère à l'indice $i$ dans x \\
+	caractère à l'indice $i$ dans $x$ \\
 	Ne rien faire à l'indice $i$ $\Rightarrow$ Substituer $x[i]$ par $y[i]$
 \end{center}
 
-Maintenant que nous avons vu que depuis un alignement entre x et y nous pouvons
-obtenir une façon de transformer x en y, prouvons aussi l'inverse.\\
+Maintenant que nous avons vu que depuis un alignement entre $x$ et $y$ nous pouvons
+obtenir une façon de transformer $x$ en $y$, prouvons aussi l'inverse.\\
 
 Nous considérons que nous utilisons ici la distance de Levenshtein pour
 calculer la distance entre $x$ et $y$.\\
@@ -148,11 +148,11 @@ Pour rappel la distance de Levenshtein entre $x$ et $y$ est défini comme suit:
 \end{equation*}
 Avec $a$ et $b$ deux caractères et '.' désignant la concaténation.\\
 
-Si nous avons une suite d'opérations pour transformer x en y, il nous suffit de
+Si nous avons une suite d'opérations pour transformer $x$ en $y$, il nous suffit de
 les changer de la manière suivante pour obtenir un alignement:
 \begin{center}
-	Insérer $y[i]$ à l'indice $i$ dans x  $\Rightarrow$ Mettre un blanc dans $x$ à l'indice $i$ \\
-	Supprimer le caractère à l'indice $i$ dans x $\Rightarrow$ Mettre un blanc dans $y$ à l'indice $i$\\
+	Insérer $y[i]$ à l'indice $i$ dans $x$  $\Rightarrow$ Mettre un blanc dans $x$ à l'indice $i$ \\
+	Supprimer le caractère à l'indice $i$ dans $x$ $\Rightarrow$ Mettre un blanc dans $y$ à l'indice $i$\\
 	Substituer $x[i]$ par $y[i]$ $\Rightarrow$ Ne rien faire à l'indice $i$ 
 \end{center}
 
@@ -254,12 +254,21 @@ bien de complexité $O(\lvert x\rvert+\lvert y\rvert)$.
 %==============================================================================
 \section{Exercice 3}
 
+L'implémentation est assez directe est est une simple traduction des
+algorithmes écrits aux exercie 1 et 2.\\
+Le code pour le calcul du coût d'un alignement optimal se trouve des lignes 196
+à 218 et celui pour la construction de cet alignement des lignes 220 à 270.\\
+
 \begin{figure}[!hbt]
 	\centering
 	\includegraphics[width=0.95\linewidth]{./images/exo3.png}
 	\caption{Résultat de l'alignement des textes}%
 	\label{fig:exo3}
 \end{figure}
+
+Comme nous pouvons le voir sur la figure~\ref{fig:exo3} nous obtenons bien un
+alignement entre nos deux textes, qui est bien celui de coût minimum (d'après
+plusieurs tests et les résultats à l'exercice suivant).
 %==============================================================================
 \section{Exercice 4}
 \subsection{Théorie}
@@ -288,7 +297,7 @@ Il est assez facile de voir pourquoi nous avons choisi comme coût d'insertion
 et de suppression la longueur du paragraphe. En effet cela correspond à ajouter
 (resp. enlever) les caractères un par un, avec un coût de 1 à chaque fois.\\
 
-Pour la substitution il est un peu moins clair au premier abord sur quelle
+Pour la substitution il est un peu moins clair au premier abord quelle
 valeur choisir. Le choix le plus simple est de supprimer puis d'insérer les
 paragraphes, cependant ce ne serait pas une distance car dans ce cas là
 $Sub(x,x) \neq 0$.\\
@@ -296,13 +305,14 @@ Nous avons étudié plusieurs distances entre les textes, chacunes avec leur
 défauts et avantages, mais celle qui paraît la meilleure est la distance de
 Levenshtein, qui nous donnera une meilleure indication de la différence entre
 nos paragraphes, et nous permettra ensuite facilement de créer un alignement
-ayant du sens.\\
+ayant du sens. De plus nous avons prouvé sont équivalence avec le problème
+d'alignement qui nous intéresse, c'est donc la distance la plus appropriée.\\
 Puisque nous avons considéré un coût d'ajout et de suppresion d'un caractère de
-1 pour définir $Sub'$ et $Ins'$ nous devons faire pareil dans la distance de
-Levenshtein, et nous considérerons un coût de substitution de 1 si les
-caractères dont différents et 0 sinon.\\
+1 pour définir $Del'$ et $Ins'$ nous devons faire pareil dans la distance de
+Levenshtein $Lev$ utilisée pour calculer $Sub'$, et nous considérerons un 
+coût de substitution de 1 si les caractères dont différents et 0 sinon.\\
 
-Nous pouvons ensuite définir notre nouvelle distance de Levenshtein comme suit:
+Nous pouvons alors définir notre nouvelle distance de Levenshtein comme suit:
 \begin{equation*}
 	Lev'(x.a,y.b)= min
 		\begin{cases}
@@ -323,9 +333,13 @@ Nous sommes donc en mesure d'adapter le code précédemment écrit pour cette
 nouvelle version, sans faire beaucoup de changements.\\
 
 Nous pouvons nous demander si $Lev'$ est toujours une distance.\\
-Étant donné que $Lev$ est une distance et aue $Sub'(x)=Ins'(x)$ nous pouvons
-conclure que nous avons bien une distance.\\
+Étant donné que $Lev$($\iff Sub'$ ici) est une distance et que $Del'(x)=Ins'(x)$ nous pouvons
+conclure que nous avons bien une distance, d'après une propriété vue en cours.\\
 
+
+Nous sommes toujours une distance de Levenshtein/une edit distance, donc nous
+sommes toujours en train de résoudre un problème équivalent à celui de
+l'alignement optimal.\\
 
 Pour l'algorithme de construction de l'alignement optimal, il est identique à
 celui vu précédemment, en adaptant juste la reconstruction des paragraphes.\\
@@ -336,7 +350,7 @@ deux paragraphes comme nous l'avons fait précédemment.
 
 \subsubsection{Complexité}
 
-L'algorithme va remplir $n \times m$ cases (n et m étant le nombre de
+L'algorithme va remplir un tableau de taille $(n+1) \times (m+1)$ (n et m étant le nombre de
 paragraphes des textes que nous souhaitons aligner).\\
 Il faut donc trouver la complexité de $Lev'$ afin de conclure sur la complexité
 totale.\\
@@ -365,7 +379,8 @@ puis $O(l)$ pour construire l' alignement dans le cas où l' opération choisie
 est la substitution. Dans ce cas, la complexité de la construction de
 l'alignement de deux paragraphes est $O(l^2)$ si nous avons choisi la
 substitution et $O(l)$ sinon. Il serait alors intéressant en cas d'égalité de
-choisir l'opération la moins coûteuse.
+choisir l'opération la moins coûteuse. Cela correspond à tester en premier
+l'égalité avec les Insertion et Suppresion, comme dans notre implémentation.\\
 
 Nous obtenons alors une complexité totale pour la construction de l'alignement 
 des textes de $O((m+n)\times l^2)$ si nous n'avons pas gardé les tables en
@@ -376,7 +391,7 @@ mémoire et et de $O((m+n)\times l)$ si nous l'avons fait.
 
 L'implémentation pour le calcul de la table est presque identique à celle de
 l'exercice 3, nous avons juste changé le calcul de sub, ins et del.\\
-Le code est disponible en annexe des lignes 324 à 373.\\
+Le code est disponible en annexe des lignes 324 à 372.\\
 Afin de séparer les différents paragraphes des textes, nous avons implémenté
 une fonction utilisant \textit{strtok\_r} qui devrait donc être compatible sur tous les
 OS, qu'ils respectent les normes POSIX ou non.\\
@@ -387,7 +402,7 @@ Pour l'alignement si nous avons fait une insertion ou suppression nous allons
 implement insérer une chaîne remplie du caractère vide de bonne longueur.\\
 Si nous avons fait une substitution nous allons alors insérer l'alignement
 entre les deux textes substitués.\\
-Le code est disponible en annexe des lignes 375 à 439.\\
+Le code est disponible en annexe des lignes 372 à 438.\\
 
 \begin{figure}[!hbt]
 	\centering
