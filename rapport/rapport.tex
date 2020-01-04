@@ -20,6 +20,10 @@
 \fancyfoot[CE,CO]{\leftmark}
 \fancyfoot[LE,RO]{\thepage}
 
+\algnewcommand\Or{\textbf{or}}
+\algnewcommand\And{\textbf{and}}
+\algnewcommand\To{\textbf{to}}
+
 %Syntax coloring C
 \definecolor{mGreen}{rgb}{0,0.6,0}
 \definecolor{mGray}{rgb}{0.5,0.5,0.5}
@@ -89,9 +93,32 @@ prouver le bon fonctionnement d'une autre manière.
 Pour calculer le score d'un alignement optimal entre x et y, nous pouvons utiliser l'algorithme de distance de Levenshtein, appelé distance d'édition (edit distance).\\
 Nous voulons observer les différences entre deux textes. Cela revient à calculer leur score d'alignement, le coût des opérations nécessaires (deletion, insertion, substitution) pour obtenir le même texte. Plus ce score est faible et plus les textes sont similaires, et donc sujet d'être un plagiat.\\
 Le score optimal correspond au minimum entre les trois valeurs données par les opérations deletion, insertion et substitution. \\
-Algo...\\
+\begin{algorithm}
+\caption{Calcul du coût d'un alignement optimal}\label{algo:cout}
+\begin{algorithmic}[1]
+\Procedure{compute\_distance}{$x, y$}
+	\State $T[0][0] \gets 0 $
+	\For{$i \gets 1$ \To $ \lvert y \rvert $}
+		\State $T[i][0] \gets T[i-1][0] + Ins(y[i-1])$
+	\EndFor
+	\For{$j \gets 1$ \To $ \lvert x \rvert $}
+		\State $T[0][j] \gets T[0][j-1] + Del(x[j-1])$
+	\EndFor
+	\For{$i \gets 1$ \To $ \lvert y \rvert $}
+		\For{$j \gets 1$ \To $ \lvert x \rvert $}
+			\State $T[i][j] \gets min\begin{cases}
+							T[i-1][j] + Ins(y[i-1])\\
+							T[i][j-1] + Del(x[i-1])\\
+							T[i-1][j-1] + Sub(x[j-1],y[i-1])
+							\end{cases}$
+		\EndFor
+	\EndFor
+	\State \Return $T$	
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 Cet algorithme est bien de complexité $O(\lvert x\rvert \times \lvert y\rvert)$.
-
+ 
 
 %==============================================================================
 \section{Exercice 2}
@@ -100,13 +127,47 @@ Soit une matrice T telle que $T[i][j]$ est le score d'un alignement optimal entr
 A partir de cette matrice, nous pourrons retrouver les opérations nécessaires à la solution optimale pour aligner les deux textes, afin de construire les textes 1 et 2 modifiés alignés.\\
 Le backtracking consiste à suivre le chemin minimum de la matrice T de
 $T[i][j]$ jusqu'à $T[0][0]$.\\
-Algo...\\
+
+\begin{algorithm}
+\caption{Construction d'un alignement optimal}\label{algo:alignement}
+\begin{algorithmic}[1]
+\Procedure{Alignement}{$T, x, y$}
+	\State $i \gets  \lvert y \rvert $	
+	\State $j \gets  \lvert x \rvert $	
+	\State $k \gets 0$
+	\While{$i>0$ \Or $j>0$}
+		\If{$i>0 \And T[i][j] = T[i-1][j] + Ins(y[i-1])$}
+			\State $x_{aligned}[k] \gets "\quad"$
+			\State $y_{aligned}[k] \gets y[i-1]$
+			\State $i \gets i-1$
+		\ElsIf{$j>0 \And T[i][j] = T[i][j-1] + Del(x[i-1])$}
+			\State $x_{aligned}[k] \gets x[i-1]$
+			\State $y_{aligned}[k] \gets "\quad"$
+			\State $j \gets j-1$
+			\ElsIf{$i>0 \And T[i][j] = T[i-1][j-1] + Sub(x[j-1],y[i-1])$}
+			\State $x_{aligned}[k] \gets x[i-1]$
+			\State $y_{aligned}[k] \gets y[i-1]$
+			\State $i \gets i-1$
+			\State $j \gets j-1$
+		\EndIf
+	\EndWhile	
+	\State\Return $x_{aligned}, y_{aligned}$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
 Cet algorithme est bien de complexité $O(\lvert x\rvert+\lvert y\rvert)$.
 
 %==============================================================================
 \section{Exercice 3}
 
-
+\begin{figure}[!hbt]
+	\centering
+	\includegraphics[width=0.95\linewidth]{./images/exo3.png}
+	\caption{Résultat de l'alignement des textes}%
+	\label{fig:exo3}
+\end{figure}
 %==============================================================================
 \section{Exercice 4}
 \subsection{Théorie}
