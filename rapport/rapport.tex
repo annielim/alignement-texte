@@ -90,6 +90,7 @@ Cet algorithme est bien de complexité $O(\lvert x\rvert+\lvert y\rvert)$.
 %==============================================================================
 \section{Exercice 4}
 \subsection{Théorie}
+\subsubsection{Algorithme}
 Le principal changement ici est que nous voulons mettre en correspondance des
 lignes entre elles (séparées par des \textbackslash{}n).\\
 Précédemment nous alignions un texte composé de caractères, mais maintenant nous
@@ -150,12 +151,89 @@ nouvelle version, sans faire beaucoup de changements.\\
 
 Nous pouvons nous demander si $Lev'$ est toujours une distance.\\
 Étant donné que $Lev$ est une distance et aue $Sub'(x)=Ins'(x)$ nous pouvons
-conclure que nous avons bien une distance.
+conclure que nous avons bien une distance.\\
+
+
+Pour l'algorithme de construction de l'alignement optimal, il est identique à
+celui vu précédemment, en adaptant juste la reconstruction des paragraphes.\\
+Si nous avons choisi $Ins'$ ou $Del'$ nous construisons une chaine de caractère
+vide.\\
+Si nous avons choisi $Sub'$ nous construsions l'alignement optimal entre nos
+deux paragraphes comme nous l'avons fait précédemment.
+
+\subsubsection{Complexité}
+
+L'algorithme va remplir $n \times m$ cases (n et m étant le nombre de
+paragraphes des textes que nous souhaitons aligner).\\
+Il faut donc trouver la complexité de $Lev'$ afin de conclure sur la complexité
+totale.\\
+Les complexités des différentes opérations sont:
+\begin{itemize}
+	\item $Lev'(x.a,y) + \lvert b \rvert$ a une complexité en $O(\lvert b
+		\rvert)$ dans le pire des cas (comme \textit{strlen} en C) 
+	\item $Lev'(x,y.b) + \lvert a \rvert$ a une complexité en $O(\lvert a
+		\rvert)$ dans le pire des cas (comme \textit{strlen} en C) 
+	\item $Lev'(x,y) + Lev(a,b)$ a une complexité en $O( \lvert a \rvert \times
+		\lvert b \rvert)$
+\end{itemize}
+
+Si nous notons $l$ la longueur du plus long paragraphe, la complexité de calcul
+de $Lev'$ est alors $O(l^2+l+l) = O(l^2)$.\\
+La complexité totale du calcul de la table est donc $O(m \times n \times l^2)$.\\
+
+Nous avons vu la complexité pour calculer la table des ditances, regardons
+maintenant pour la construction de l' alignement optimal.\\
+Pour aligner deux paragraphes, si nous avons gardé en mémoire les tables des
+distances de Levenshtein utilisées pour le calcul de $Sub'$ lors de la
+construction de la table de $Lev'$ la complexité sera de $O(l)$.\\
+Si en revanche nous ne les avons pas gardé en mémoire (comme dans notre
+implémentation) la complexité sera alors de $O(l^2)$ pour reconstruire la table
+puis $O(l)$ pour construire l' alignement dans le cas où l' opération choisie
+est la substitution. Dans ce cas, la complexité de la construction de
+l'alignement de deux paragraphes est $O(l^2)$ si nous avons choisi la
+substitution et $O(l)$ sinon. Il serait alors intéressant en cas d'égalité de
+choisir l'opération la moins coûteuse.
+
+Nous obtenons alors une complexité totale pour la construction de l'alignement 
+des textes de $O((m+n)\times l^2)$ si nous n'avons pas gardé les tables en
+mémoire et et de $O((m+n)\times l)$ si nous l'avons fait.
+
 
 \subsection{Implémentation}
 
+L'implémentation pour le calcul de la table est presque identique à celle de
+l'exercice 3, nous avons juste changé le calcul de sub, ins et del.\\
+Le code est disponible en annexe des lignes 324 à 373.\\
+Afin de séparer les différents paragraphes des textes, nous avons implémenté
+une fonction utilisant \textit{strtok\_r} qui devrait donc être compatible sur tous les
+OS, qu'ils respectent les normes POSIX ou non.\\
+Son implémentation est fournie en annexe aux lignes 307 à 322.\\
+
+Pour le backtracking aussi le principe reste le même.\\
+Pour l'alignement si nous avons fait une insertion ou délétion nous allons
+implement insérer une chaîne remplie du caractère vide de bonne longueur.\\
+Si nous avons fait une substitution nous allons alors insérer l'alignement
+entre les deux textes substitués.\\
+Le code est disponible en annexe des lignes 375 à 439.\\
+
+\begin{figure}[!hbt]
+	\centering
+	\includegraphics[width=0.95\linewidth]{./images/exo4.png}
+	\caption{Résultat de l'alignement des textes paragraphe par paragraphe}%
+	\label{fig:exo4}
+\end{figure}
+
+Comme nous pouvons le voir sur la figure~\ref{fig:exo4}, nous obtenons bien un
+bon alignement des deux textes, identique au résultat attendu, à quelques
+détails d'affichage près.\\
+
+D'après les tests et vérifications que nous avons effectuées avec Valgrind, le
+programme ne comporte aucune fuite mémoire.\\
+
+
+\clearpage
 %=============================================================================
 \section{Annexe: Code source}
-		\lstinputlisting[style=CStyle]{../TD2.c}
+		\lstinputlisting[label=code,style=CStyle]{../TD2.c}
 
 \end{document}

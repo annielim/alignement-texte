@@ -5,5 +5,7 @@
 \contentsline {section}{\numberline {4}Exercice 3}{2}{section.4}% 
 \contentsline {section}{\numberline {5}Exercice 4}{2}{section.5}% 
 \contentsline {subsection}{\numberline {5.1}Th\IeC {\'e}orie}{2}{subsection.5.1}% 
-\contentsline {subsection}{\numberline {5.2}Impl\IeC {\'e}mentation}{3}{subsection.5.2}% 
-\contentsline {section}{\numberline {6}Annexe: Code source}{3}{section.6}% 
+\contentsline {subsubsection}{\numberline {5.1.1}Algorithme}{2}{subsubsection.5.1.1}% 
+\contentsline {subsubsection}{\numberline {5.1.2}Complexit\IeC {\'e}}{3}{subsubsection.5.1.2}% 
+\contentsline {subsection}{\numberline {5.2}Impl\IeC {\'e}mentation}{4}{subsection.5.2}% 
+\contentsline {section}{\numberline {6}Annexe: Code source}{6}{section.6}% 

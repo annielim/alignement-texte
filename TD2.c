@@ -277,7 +277,7 @@ void align_sentence(char* texte1, char*texte2){
 			T[strlen(texte2)][strlen(texte1)], strlen(texte1),strlen(texte2));
 
 	char** result = get_alignement(T, texte1, texte2, 0);
-	affiche(result[0],result[1],40);
+	affiche(result[0],result[1],80);
 
 	//Free results
 	free(result[0]);
@@ -450,7 +450,7 @@ void align_texts(char* texte1, char* texte2){
 	int count;
 	char*** result = get_alignement_texts(T, liste1, n1, liste2, n2, 0, &count);
 	for(int i = count-1; i>=0;--i){
-		affiche(result[0][i],result[1][i],40);
+		affiche(result[0][i],result[1][i],80);
 	}
 
 	//Free results
