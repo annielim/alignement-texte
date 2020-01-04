@@ -90,9 +90,93 @@ prouver le bon fonctionnement d'une autre manière.
 %==============================================================================
 \section{Exercice 1}
 
-Pour calculer le score d'un alignement optimal entre x et y, nous pouvons utiliser l'algorithme de distance de Levenshtein, appelé distance d'édition (edit distance).\\
-Nous voulons observer les différences entre deux textes. Cela revient à calculer leur score d'alignement, le coût des opérations nécessaires (deletion, insertion, substitution) pour obtenir le même texte. Plus ce score est faible et plus les textes sont similaires, et donc sujet d'être un plagiat.\\
-Le score optimal correspond au minimum entre les trois valeurs données par les opérations deletion, insertion et substitution. \\
+Considérons les chaînes $x$ et $y$ ainsi que un de leurs étirements respectifs $x'$
+et $y'$. Nous voulons en plus que $ \lvert x' \rvert = \lvert y' \rvert $ afin
+que ce soient deux alignements.\\
+Nous voulons trouver une méthode pour calculer le score d'un alignement optimal
+(un alignement de plus faible score) noté $d(x',y')$.\\
+
+Un premier constat que nous pouvons faire est que nous avons besoin des deux
+opérations suivante pour réaliser un alignement:
+\begin{itemize}
+	\item Insérer un caractère '\textvisiblespace' (non présent dans notre
+		alphabet) dans $x$ à un indice $j$
+	\item Insérer un caractère '\textvisiblespace' (non présent dans notre
+		alphabet) dans $y$ à un indice $i$
+\end{itemize}
+
+Le caractère '\textvisiblespace'(que nous appelerons caractère blanc par la
+suite) n'étant pas présent dans notre alphabet $A$, l'insérer dans une chaîne
+ou l'autre va augmenter le coût de l'alignement de 1.\\
+
+La troisième action que nous pouvons réaliser est tout simplement de ne pas
+modifier notre texte. Cela ajoutera ainsi un coût de 1 à notre alignement si
+les caractères de nos deux textes sont identiques, et un coût de 1 sinon.
+
+Visuellement, si nous remplaçons tous les blancs de $x'$ par le caractère au
+même endroit dans $y'$, que nous enlevons dans les deux textes les caractères
+aux indices ou $y'$ contient un caractère blanc et que autres indices nous
+remplaçons $x'[i]$ par $y'[i]$ si ces caractères sont différents, nous avons
+trouvé un moyen de transformer x en y à partir d'un alignement de ces deux
+textes.\\
+De plus le coût de cette transformation de x en y est le même que le score de
+l'alignement $x', y'$.
+Nous pouvons en déduire alors les relations suivantes:
+
+\begin{center}
+	Mettre un blanc dans $x$ à l'indice $i$ $\Rightarrow$ Insérer $y[i]$ à
+	l'indice $i$ dans x \\
+	Mettre un blanc dans $y$ à l'indice $i$ $\Rightarrow$ Supprimer le
+	caractère à l'indice $i$ dans x \\
+	Ne rien faire à l'indice $i$ $\Rightarrow$ Substituer $x[i]$ par $y[i]$
+\end{center}
+
+Maintenant que nous avons vu que depuis un alignement entre x et y nous pouvons
+obtenir une façon de transformer x en y, prouvons aussi l'inverse.\\
+
+Nous considérons que nous utilisons ici la distance de Levenshtein pour
+calculer la distance entre $x$ et $y$.\\
+
+Pour rappel la distance de Levenshtein entre $x$ et $y$ est défini comme suit:
+\begin{equation*}
+	Lev(x.a,y.b)= min
+		\begin{cases}
+			Lev(x.a,y) + Ins(b)\\
+			Lev(x,y.b) + Del(a)\\
+			Lev(x,y) + Sub(a,b)
+		\end{cases}
+\end{equation*}
+Avec $a$ et $b$ deux caractères et '.' désignant la concaténation.\\
+
+Si nous avons une suite d'opérations pour transformer x en y, il nous suffit de
+les changer de la manière suivante pour obtenir un alignement:
+\begin{center}
+	Insérer $y[i]$ à l'indice $i$ dans x  $\Rightarrow$ Mettre un blanc dans $x$ à l'indice $i$ \\
+	Supprimer le caractère à l'indice $i$ dans x $\Rightarrow$ Mettre un blanc dans $y$ à l'indice $i$\\
+	Substituer $x[i]$ par $y[i]$ $\Rightarrow$ Ne rien faire à l'indice $i$ 
+\end{center}
+
+Si le coût de l'insertion est de 1, de la suppression 1 et de la substitution 1 si
+les caractères sont différents et 0 sinon, alors le coût de la transformation
+de $x$ en $y$ (\textit{Lev}$(x,y)$) est le même que celui de l'alignement correspondant.\\
+
+Nous avons ainsi une équivalence entre le problème de transformation d'une
+chaîne en une autre(de distance entre deux chaînes ) et celui de trouver un 
+alignement entre ces deux chaînes.
+Qui plus est, dans les deux cas nous avons trouvé une manière d'obtenir le même
+score/coût pour le même problème.\\
+Ainsi nous avons démontré que:
+\begin{center}
+	Trouver un alignement optimal entre $x$ et $y$ $\Leftrightarrow$ Trouver
+	la distance minimale entre $x$ et $y$ au sens de la distance de Levenshtein 
+\end{center}
+
+Nous connaissons déja un algorithme pour calculer la distance de Levenshtein
+entre deux chaînes $x$ et $y$ qui est de complexité $O( \lvert x \rvert \times
+\lvert y \rvert )$.\\
+Cela nous donne alors l'algorithme suivant pour calculer le côut d'un
+alignement optimal entre $x$ et $y$.
+
 \begin{algorithm}
 \caption{Calcul du coût d'un alignement optimal}\label{algo:cout}
 \begin{algorithmic}[1]
@@ -123,11 +207,19 @@ Cet algorithme est bien de complexité $O(\lvert x\rvert \times \lvert y\rvert)$
 %==============================================================================
 \section{Exercice 2}
 
-Soit une matrice T telle que $T[i][j]$ est le score d'un alignement optimal entre $x_{i}$ et $y_{j}$ avec $x_{i}$ ry $y_{j}$ les préfixes de x et y de longueur i et j.\\
-A partir de cette matrice, nous pourrons retrouver les opérations nécessaires à la solution optimale pour aligner les deux textes, afin de construire les textes 1 et 2 modifiés alignés.\\
-Le backtracking consiste à suivre le chemin minimum de la matrice T de
-$T[i][j]$ jusqu'à $T[0][0]$.\\
 
+À partir de la matric T calculée précédemment, nous allons chercher quelle
+opération a été réalisée afin d'obtenir le coût minimum, puis nous allons
+utiliser la relation d'équivalence entre les opération d'édition du texte et
+celles utilisées pour réaliser un alignement.\\
+Ces relations sont les suivantes:
+\begin{center}
+	Insérer $y[i]$ à l'indice $i$ dans x  $\Leftrightarrow$ Mettre un blanc dans $x$ à l'indice $i$ \\
+	Supprimer le caractère à l'indice $i$ dans x $\Leftrightarrow$ Mettre un blanc dans $y$ à l'indice $i$\\
+	Substituer $x[i]$ par $y[i]$ $\Leftrightarrow$ Ne rien faire à l'indice $i$ 
+\end{center}
+
+Nous allons alors pouvoir générer l'alignement entre nos chaînes comme suit:
 \begin{algorithm}
 \caption{Construction d'un alignement optimal}\label{algo:alignement}
 \begin{algorithmic}[1]
@@ -144,7 +236,7 @@ $T[i][j]$ jusqu'à $T[0][0]$.\\
 			\State $x_{aligned}[k] \gets x[i-1]$
 			\State $y_{aligned}[k] \gets "\quad"$
 			\State $j \gets j-1$
-			\ElsIf{$i>0 \And T[i][j] = T[i-1][j-1] + Sub(x[j-1],y[i-1])$}
+		\ElsIf{$i>0 \And T[i][j] = T[i-1][j-1] + Sub(x[j-1],y[i-1])$}
 			\State $x_{aligned}[k] \gets x[i-1]$
 			\State $y_{aligned}[k] \gets y[i-1]$
 			\State $i \gets i-1$
@@ -156,8 +248,8 @@ $T[i][j]$ jusqu'à $T[0][0]$.\\
 \end{algorithmic}
 \end{algorithm}
 
-
-Cet algorithme est bien de complexité $O(\lvert x\rvert+\lvert y\rvert)$.
+Les opérations $Ins$,$Del$,$Sub$ étant en temps constant, cet algorithme est 
+bien de complexité $O(\lvert x\rvert+\lvert y\rvert)$.
 
 %==============================================================================
 \section{Exercice 3}
@@ -182,7 +274,7 @@ Le problème étant très similaire au précédent, la méthode que nous utilisi
 devrait pouvoir être adaptée à ce nouveau problème.\\
 Pour ce faire nous allons définir une nouvelle distance de Levenshtein agissant sur
 des lignes entières et plus uniquement des caractères.
-Nous allons définir la substitution, insertion, et délétion comme suit:
+Nous allons définir la substitution, insertion, et suppression comme suit:
 
 \begin{gather*}
 	\text{Ins'}(y) = Lev(\epsilon,y) = \lvert y \rvert\\
@@ -193,7 +285,7 @@ Ici Lev(x,y) est la distance de levenshtein définie précédemment, et x et y
 sont des lignes.\\
 
 Il est assez facile de voir pourquoi nous avons choisi comme coût d'insertion
-et de délétion la longueur du paragraphe. En effet cela correspond à ajouter
+et de suppression la longueur du paragraphe. En effet cela correspond à ajouter
 (resp. enlever) les caractères un par un, avec un coût de 1 à chaque fois.\\
 
 Pour la substitution il est un peu moins clair au premier abord sur quelle
@@ -291,7 +383,7 @@ OS, qu'ils respectent les normes POSIX ou non.\\
 Son implémentation est fournie en annexe aux lignes 307 à 322.\\
 
 Pour le backtracking aussi le principe reste le même.\\
-Pour l'alignement si nous avons fait une insertion ou délétion nous allons
+Pour l'alignement si nous avons fait une insertion ou suppression nous allons
 implement insérer une chaîne remplie du caractère vide de bonne longueur.\\
 Si nous avons fait une substitution nous allons alors insérer l'alignement
 entre les deux textes substitués.\\
