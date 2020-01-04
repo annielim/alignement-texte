@@ -1,4 +1,4 @@
-PWD /home/garridoq/E4/strings/alignement-texte/rapport
+PWD /home/garridoq/E4/alignement-texte/rapport
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
@@ -23,14 +23,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu
 INPUT /usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
@@ -162,8 +154,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT rapport.toc
 INPUT rapport.toc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
-OUTPUT rapport.toc
-INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
@@ -172,6 +162,11 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
+OUTPUT rapport.toc
+INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 INPUT ../TD2.c
 INPUT /usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
@@ -181,13 +176,12 @@ INPUT ../TD2.c
 INPUT ../TD2.c
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 INPUT rapport.aux
 INPUT ./rapport.out
 INPUT ./rapport.out
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
@@ -197,4 +191,5 @@ INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb

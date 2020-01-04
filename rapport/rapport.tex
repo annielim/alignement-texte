@@ -70,17 +70,18 @@ Pour calculer le score d'un alignement optimal entre x et y, nous pouvons utilis
 Nous voulons observer les différences entre deux textes. Cela revient à calculer leur score d'alignement, le coût des opérations nécessaires (deletion, insertion, substitution) pour obtenir le même texte. Plus ce score est faible et plus les textes sont similaires, et donc sujet d'être un plagiat.\\
 Le score optimal correspond au minimum entre les trois valeurs données par les opérations deletion, insertion et substitution. \\
 Algo...\\
-Cet algorithme est bien de complexité o(\(\lvert x\rvert\)x\(\lvert y\rvert\)).
+Cet algorithme est bien de complexité $O(\lvert x\rvert \times \lvert y\rvert)$.
 
 
 %==============================================================================
 \section{Exercice 2}
 
-Soit une matrice T telle que T[i][j] est le score d'un alignement optimal entre $x_{i}$ et $y_{j}$ avec $x_{i}$ ry $y_{j}$ les préfixes de x et y de longueur i et j.\\
+Soit une matrice T telle que $T[i][j]$ est le score d'un alignement optimal entre $x_{i}$ et $y_{j}$ avec $x_{i}$ ry $y_{j}$ les préfixes de x et y de longueur i et j.\\
 A partir de cette matrice, nous pourrons retrouver les opérations nécessaires à la solution optimale pour aligner les deux textes, afin de construire les textes 1 et 2 modifiés alignés.\\
-Le backtracking consiste à suivre le chemin minimum de la matrice T de T[i][j] jusqu'à T[0][0].\\
+Le backtracking consiste à suivre le chemin minimum de la matrice T de
+$T[i][j]$ jusqu'à $T[0][0]$.\\
 Algo...\\
-Cet algorithme est bien de complexité o(\(\lvert x\rvert\)+\(\lvert y\rvert\)).\\
+Cet algorithme est bien de complexité $O(\lvert x\rvert+\lvert y\rvert)$.
 
 %==============================================================================
 \section{Exercice 3}
@@ -88,8 +89,70 @@ Cet algorithme est bien de complexité o(\(\lvert x\rvert\)+\(\lvert y\rvert\)).
 
 %==============================================================================
 \section{Exercice 4}
+\subsection{Théorie}
+Le principal changement ici est que nous voulons mettre en correspondance des
+lignes entre elles (séparées par des \textbackslash{}n).\\
+Précédemment nous alignions un texte composé de caractères, mais maintenant nous
+voulons aligner un texte composé de lignes/phrases/paragraphes qui seront nos
+éléments de "base".\\
 
+Le problème étant très similaire au précédent, la méthode que nous utilisions
+devrait pouvoir être adaptée à ce nouveau problème.\\
+Pour ce faire nous allons définir une nouvelle distance de Levenshtein agissant sur
+des lignes entières et plus uniquement des caractères.
+Nous allons définir la substitution, insertion, et délétion comme suit:
 
+\begin{gather*}
+	\text{Ins'}(y) = Lev(\epsilon,y) = \lvert y \rvert\\
+	\text{Del'}(x) = Lev(x,\epsilon) = \lvert x \rvert\\
+	\text{Sub'}(x,y) = Lev(x,y)
+\end{gather*}
+Ici Lev(x,y) est la distance de levenshtein définie précédemment, et x et y
+sont des lignes.\\
+
+Il est assez facile de voir pourquoi nous avons choisi comme coût d'insertion
+et de délétion la longueur du paragraphe. En effet cela correspond à ajouter
+(resp. enlever) les caractères un par un, avec un coût de 1 à chaque fois.\\
+
+Pour la substitution il est un peu moins clair au premier abord sur quelle
+valeur choisir. Le choix le plus simple est de supprimer puis d'insérer les
+paragraphes, cependant ce ne serait pas une distance car dans ce cas là
+$Sub(x,x) \neq 0$.\\
+Nous avons étudié plusieurs distances entre les textes, chacunes avec leur
+défauts et avantages, mais celle qui paraît la meilleure est la distance de
+Levenshtein, qui nous donnera une meilleure indication de la différence entre
+nos paragraphes, et nous permettra ensuite facilement de créer un alignement
+ayant du sens.\\
+Puisque nous avons considéré un coût d'ajout et de suppresion d'un caractère de
+1 pour définir $Sub'$ et $Ins'$ nous devons faire pareil dans la distance de
+Levenshtein, et nous considérerons un coût de substitution de 1 si les
+caractères dont différents et 0 sinon.\\
+
+Nous pouvons ensuite définir notre nouvelle distance de Levenshtein comme suit:
+\begin{equation*}
+	Lev'(x.a,y.b)= min
+		\begin{cases}
+			Lev'(x.a,y) + Ins'(b)\\
+			Lev'(x,y.b) + Del'(a)\\
+			Lev'(x,y) + Sub'(a,b)
+		\end{cases}
+		= min
+		\begin{cases}
+			Lev'(x.a,y) + \lvert b \rvert\\
+			Lev'(x,y.b) + \lvert a \rvert\\
+			Lev'(x,y) + Lev(a,b)
+		\end{cases}
+\end{equation*}
+Ici $a$ et $b$ ne sont plus des caractères mais sont désormais des
+paragraphes.\\
+Nous sommes donc en mesure d'adapter le code précédemment écrit pour cette
+nouvelle version, sans faire beaucoup de changements.\\
+
+Nous pouvons nous demander si $Lev'$ est toujours une distance.\\
+Étant donné que $Lev$ est une distance et aue $Sub'(x)=Ins'(x)$ nous pouvons
+conclure que nous avons bien une distance.
+
+\subsection{Implémentation}
 
 %=============================================================================
 \section{Annexe: Code source}
