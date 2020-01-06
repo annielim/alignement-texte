@@ -209,7 +209,7 @@ Cet algorithme est bien de complexité $O(\lvert x\rvert \times \lvert y\rvert)$
 
 
 À partir de la matric T calculée précédemment, nous allons chercher quelle
-opération a été réalisée afin d'obtenir le coût minimum, puis nous allons
+opérations a été réalisée afin d'obtenir le coût minimum, puis nous allons
 utiliser la relation d'équivalence entre les opération d'édition du texte et
 celles utilisées pour réaliser un alignement.\\
 Ces relations sont les suivantes:
@@ -232,8 +232,8 @@ Nous allons alors pouvoir générer l'alignement entre nos chaînes comme suit:
 			\State $x_{aligned}[k] \gets "\quad"$
 			\State $y_{aligned}[k] \gets y[i-1]$
 			\State $i \gets i-1$
-		\ElsIf{$j>0 \And T[i][j] = T[i][j-1] + Del(x[i-1])$}
-			\State $x_{aligned}[k] \gets x[i-1]$
+		\ElsIf{$j>0 \And T[i][j] = T[i][j-1] + Del(x[j-1])$}
+			\State $x_{aligned}[k] \gets x[j-1]$
 			\State $y_{aligned}[k] \gets "\quad"$
 			\State $j \gets j-1$
 		\ElsIf{$i>0 \And T[i][j] = T[i-1][j-1] + Sub(x[j-1],y[i-1])$}
@@ -345,7 +345,7 @@ Pour l'algorithme de construction de l'alignement optimal, il est identique à
 celui vu précédemment, en adaptant juste la reconstruction des paragraphes.\\
 Si nous avons choisi $Ins'$ ou $Del'$ nous construisons une chaine de caractère
 vide.\\
-Si nous avons choisi $Sub'$ nous construsions l'alignement optimal entre nos
+Si nous avons choisi $Sub'$ nous construisons l'alignement optimal entre nos
 deux paragraphes comme nous l'avons fait précédemment.
 
 \subsubsection{Complexité}
